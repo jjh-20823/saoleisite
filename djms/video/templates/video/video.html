@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <link href={% static "flop/index.min.css" %} rel="stylesheet" type="text/css">
+    <iframe class="flop-player-iframe flop-player-display-none" src={% static "flop/index.html" %}></iframe>
+        <a href="{{ video.file.url }}" download class="btn btn-primary flex-last" type="submit"><i class="fas fa-download"></i> Downlaod</a>
+        <button onclick="playVideo('{{ video.file.url }}')" type="button">play</button>
+        {{ video }}
+        <script>
+            /**
+             * 判断是否 IE 浏览器
+             *
+             * @return {boolean} true: 是 IE 浏览器
+             */
+            function isIE() {
+                return !!window.ActiveXObject || 'ActiveXObject' in window
+            }
+        
+            /**
+             * 录像解析成功的回调
+             *
+             * @param video 录像信息
+             * @param {function(): number} video.getTime 获取游戏真实时间（毫秒）
+             * @param {function(): number} video.getLevel 获取游戏级别，0：未知，1：初级，2：中级，3：高级，4：自定义
+             * @param {function(): number} video.getBBBV 获取游戏最少左键点击数
+             * @param {function(): number} video.getLeftClicks 获取左键点击数
+             * @param {function(): number} video.getRightClicks 获取右键键点击数
+             * @param {function(): number} video.getDoubleClicks 获取双击点击数
+             */
+            function onSuccess(video) {
+                document.getElementById('Time').innerText = video.getTime().toString()
+                document.getElementById('Level').innerText = video.getLevel().toString()
+                document.getElementById('BBBV').innerText = video.getBBBV().toString()
+                document.getElementById('LeftClicks').innerText = video.getLeftClicks().toString()
+                document.getElementById('RightClicks').innerText = video.getRightClicks().toString()
+                document.getElementById('DoubleClicks').innerText = video.getDoubleClicks().toString()
+                document.getElementById('Error').innerText = ''
+            }
+        
+            /**
+             * 录像解析失败的回调
+             *
+             * @param {string} info 错误信息，文本语言默认为用户选择的语言
+             */
+            function onError(info) {
+                document.getElementById('Time').innerText = ''
+                document.getElementById('Level').innerText = ''
+                document.getElementById('BBBV').innerText = ''
+                document.getElementById('LeftClicks').innerText = ''
+                document.getElementById('RightClicks').innerText = ''
+                document.getElementById('DoubleClicks').innerText = ''
+                document.getElementById('Error').innerText = info
+            }
+        
+            /**
+             * 解析录像文件
+             *
+             * @param {HTMLInputElement} inputElement 文件选择元素
+             * @param {function} onSuccess 录像解析成功的回调
+             * @param {function|undefined} onError 录像解析失败的回调
+             */
+            function parseFiles(inputElement, onSuccess, onError) {
+                if (isIE()) {
+                    onError('暂不支持 IE 内核，请更换浏览器或内核！')
+                    return
+                }
+                window.flop.parseFiles(inputElement.files, onSuccess, onError)
+            }
+        
+            /**
+             * 选择文件
+             */
+            function fileChange() {
+                const elementFile = document.getElementById('file')
+                parseFiles(elementFile, onSuccess, onError)
+            }
+        
+            /**
+             * 播放录像
+             *
+             * @param {string} uri 录像地址
+             * @param {object|undefined} options 可选参数
+             * @param {object|undefined} options.share 分享链接配置，base-64 编码，可能会被用户修改，请根据实际情况决定是否使用
+             * @param {string} options.share.uri 分享链接页面录像地址
+             * @param {string|undefined} options.share.title 分享链接页面标题
+             * @param {string|undefined} options.share.favicon 分享链接页面图标
+             * @param {string|undefined} options.share.pathname 分享链接页面路径名称，开头有一个"/"
+             * @param {boolean|undefined} options.share.anonymous 分享链接页面是否匿名显示玩家名称
+             * @param {string|undefined} options.share.background 分享链接页面背景样式，如：rgba(0, 0, 0, .5)
+             * @param {boolean|undefined} options.anonymous 是否匿名显示玩家名称
+             * @param {string|undefined} options.background 遮罩背景样式，如：rgba(0, 0, 0, .5)
+             * @param {function|undefined} options.listener 退出录像播放页面的回调
+             */
+            function playVideo(uri, options) {
+                if (isIE()) {
+                    alert('暂不支持 IE 内核，请更换浏览器或内核！')
+                    return
+                }
+                window.flop.playVideo(uri, options || {
+                    share: {
+                        uri: uri,
+                        pathname: '/share',
+                        anonymous: true,
+                        background: '#eee',
+                        title: 'Flop Player Share',
+                        favicon: 'https://avatars.githubusercontent.com/u/38378650?s=32'
+                    },
+                    anonymous: false,
+                    background: 'rgba(0, 0, 0, .5)',
+                    listener: function () {
+                        console.log('Flop player exit')
+                    }
+                })
+            }
+        
+            /**
+             * 激活禁用的元素
+             */
+            function active() {
+                const elements = document.querySelectorAll(':disabled')
+                for (let i = 0; i < elements.length; i++) {
+                    elements[i].disabled = false
+                }
+            }
+        
+            /**
+             * 播放器加载完成
+             */
+            function playerOnload() {
+                active()
+                if (window.flop) {
+                    console.log('Flop Player Loaded')
+                } else {
+                    window.flop = {
+                        onload: function () {
+                            console.log('Flop Player Loaded')
+                        }
+                    }
+                }
+            }
+        
+            (function () {
+                document.getElementById('file').addEventListener('change', fileChange)
+                if (isIE() || window.flop) {
+                    active()
+                } else {
+                    window.flop = {
+                        onload: playerOnload
+                    }
+                }
+            })()
+        </script>
+        
+    </iframe>
+
+{% endblock %}

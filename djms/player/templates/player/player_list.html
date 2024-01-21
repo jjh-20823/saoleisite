@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %} player_list {% endblock %}
+
+{% block content %}
+    <h2>player_list</h2>
+    <ul>
+        {% for player in player_list %}
+        <li><a href="{% url 'player:player_zone' player.pid %}">{{ player }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

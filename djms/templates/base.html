@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}NewMinesweeperSite{% endblock %}</title>
+    {# block is for Template inheritance, see https://docs.djangoproject.com/zh-hans/5.0/ref/templates/language/#template-inheritance #}
+</head>
+
+<body>
+    <div id='navigation bar'>
+        <a href="/">首页</a>
+        <a href="{% url 'player:player_list' %}">玩家列表</a>
+        <a href="{% url 'video:video_list' %}">录像列表</a>
+        <br>
+        {% if user.is_authenticated %}
+            {% if user.player.exists %}
+                {% autoescape off %}
+                    你好, {{ user.player.get.name }}
+                {% endautoescape %}
+                <a href="{% url 'player:player_zone' user.player.get.pid %}">我的地盘</a>
+                <a href="{% url 'video:upload' %}">上传录像</a>
+            {% else %}
+                <a href="{% url 'player:become_player' %}">你还不是玩家，点击成为玩家</a>
+            {% endif %}
+            <form id="logout-form" method="post" action="{% url 'auth_logout' %}">
+                {% csrf_token %}
+                <button type="submit">登出</button>
+            </form> 
+            {# logout only by post #}
+        {% else %}
+            <a href="{% url 'registration_register' %}">注册</a>
+            <a href="{% url 'auth_login' %}">登录</a>
+        {% endif %}
+        {% block navigation %}
+        {% endblock navigation %}
+    </div>
+    <div id='content'>
+        {% block content %}
+        我是首页
+        {% endblock content %}
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</body>
+</html>

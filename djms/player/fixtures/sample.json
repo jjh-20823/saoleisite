@@ -1,0 +1,27 @@
+[
+    {
+      "model": "player.player",
+      "pk": 1,
+      "fields": {
+        "name": "姜霁恒",
+        "pid": 20823,
+        "user": null
+      }
+    },
+    {
+        "model": "player.player",
+        "pk": 2,
+        "fields": {
+          "name": "鞠泽恩",
+          "pid": 18290
+        }
+      },
+      {
+        "model": "player.player",
+        "pk": 3,
+        "fields": {
+          "name": "钟言",
+          "pid": 13688
+        }
+      }
+  ]

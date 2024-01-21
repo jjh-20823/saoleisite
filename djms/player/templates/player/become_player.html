@@ -1,0 +1,10 @@
+{% extends "player/player_zone.html" %}
+{% block content %}
+    {% if current_pid %}
+        你已经绑定了<a href="{% url 'player:player_zone' player.pid %}">{{ player }}</a>
+        <a href="{% url 'player:bind_player' user.id %}">更换绑定</a>
+    {% else %}
+        <a href="{% url 'player:create_player' %}">新建玩家</a>
+        <a href="{% url 'player:bind_player' user.id %}">绑定玩家</a>
+    {% endif %}
+{% endblock %}
