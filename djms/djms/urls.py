@@ -21,13 +21,17 @@ from django.urls import include, path, re_path
 from django.views.static import serve
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('registration.backends.simple.urls'), name='registration'), # simple backends: register and login without email, see https://django-registration-redux.readthedocs.io/en/latest/simple-backend.html
-    path('player/', include('player.urls')), 
-    path('video/', include('video.urls')),
-    path('', lambda request: render(request, 'base.html')) # TODO this ugly thing is a temporary main page and should be rewritten after urls get arranged
+    path("admin/", admin.site.urls),
+    path(
+        "accounts/", include("registration.backends.simple.urls"), name="registration"
+    ),  # Simple backend: register and login without any confirmation, see https://django-registration-redux.readthedocs.io/en/latest/simple-backend.html
+    path("player/", include("player.urls")),
+    path("video/", include("video.urls")),
+    path(
+        "", lambda request: render(request, "base.html")
+    ),  # TODO A temporary main page
 ]
-# serve file in /media/FILENAME/
+# Serving files in development
 if settings.DEBUG:
     urlpatterns += [
         re_path(

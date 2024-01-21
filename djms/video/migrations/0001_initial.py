@@ -7,40 +7,85 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('player', '__first__'),
+        ("player", "__first__"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Video',
+            name="Video",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('file', models.FileField(upload_to='videos/%Y%m%d', validators=[video.models.video_size, django.core.validators.FileExtensionValidator(['avf'])])),
-                ('file_md5', models.CharField(editable=False, max_length=16, unique=True)),
-                ('state', models.CharField(choices=[('p', '审核中'), ('a', '已通过'), ('r', '被拒绝'), ('i', '可收录')], default='p', max_length=3)),
-                ('upload_time', models.DateTimeField(auto_now_add=True, verbose_name='上传时间')),
-                ('software', models.CharField(max_length=16)),
-                ('identification', models.CharField(max_length=16, verbose_name='标识')),
-                ('start_time', models.DateTimeField(verbose_name='游戏时间')),
-                ('mode', models.CharField(choices=[('beg', '初级'), ('int', '中级'), ('exp', '高级')], max_length=3)),
-                ('nf', models.BooleanField(default=False)),
-                ('time', models.DecimalField(decimal_places=3, max_digits=7)),
-                ('bv', models.PositiveSmallIntegerField()),
-                ('cl', models.PositiveSmallIntegerField()),
-                ('ce', models.PositiveSmallIntegerField()),
-                ('flags', models.PositiveSmallIntegerField()),
-                ('bvs', models.FloatField()),
-                ('qg', models.FloatField()),
-                ('stnb', models.FloatField()),
-                ('ioe', models.FloatField()),
-                ('thrp', models.FloatField()),
-                ('cls', models.FloatField()),
-                ('ces', models.FloatField()),
-                ('player', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='player.player')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "file",
+                    models.FileField(
+                        upload_to="videos/%Y%m%d",
+                        validators=[
+                            video.models.video_size,
+                            django.core.validators.FileExtensionValidator(["avf"]),
+                        ],
+                    ),
+                ),
+                (
+                    "file_md5",
+                    models.CharField(editable=False, max_length=16, unique=True),
+                ),
+                (
+                    "state",
+                    models.CharField(
+                        choices=[
+                            ("p", "审核中"),
+                            ("a", "已通过"),
+                            ("r", "被拒绝"),
+                            ("i", "可收录"),
+                        ],
+                        default="p",
+                        max_length=3,
+                    ),
+                ),
+                (
+                    "upload_time",
+                    models.DateTimeField(auto_now_add=True, verbose_name="上传时间"),
+                ),
+                ("software", models.CharField(max_length=16)),
+                ("identification", models.CharField(max_length=16, verbose_name="标识")),
+                ("start_time", models.DateTimeField(verbose_name="游戏时间")),
+                (
+                    "mode",
+                    models.CharField(
+                        choices=[("beg", "初级"), ("int", "中级"), ("exp", "高级")],
+                        max_length=3,
+                    ),
+                ),
+                ("nf", models.BooleanField(default=False)),
+                ("time", models.DecimalField(decimal_places=3, max_digits=7)),
+                ("bv", models.PositiveSmallIntegerField()),
+                ("cl", models.PositiveSmallIntegerField()),
+                ("ce", models.PositiveSmallIntegerField()),
+                ("flags", models.PositiveSmallIntegerField()),
+                ("bvs", models.FloatField()),
+                ("qg", models.FloatField()),
+                ("stnb", models.FloatField()),
+                ("ioe", models.FloatField()),
+                ("thrp", models.FloatField()),
+                ("cls", models.FloatField()),
+                ("ces", models.FloatField()),
+                (
+                    "player",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="player.player"
+                    ),
+                ),
             ],
         ),
     ]
